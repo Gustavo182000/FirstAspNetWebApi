@@ -42,13 +42,27 @@ namespace FirstAspNetWebApi.Controllers
 
             return Ok(funcionarios);
         }
-        
+        [HttpGet("{id:int}")]
+        public IActionResult GetById(int Id)
+        {
+            if(Id == null || Id == 0)
+            {
+                return BadRequest();
+            }
+            FuncionarioModel? funcionario = _context.Funcionarios.FirstOrDefault(el => el.Id == Id);
 
-        
-        
+            if(funcionario == null)
+            {
+                return BadRequest();
+            }
+            return Ok(funcionario);
+        }
 
-        
 
-       
+
+
+
+
+
     }
 }
