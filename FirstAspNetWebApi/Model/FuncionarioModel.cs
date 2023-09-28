@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FirstAspNetWebApi.Model
 {
@@ -7,7 +8,11 @@ namespace FirstAspNetWebApi.Model
         [Key]
         public int Id { get; set; }
         public string Name { get; set; }
-        public int age { get; set;}
-        public string? photo { get; set;}
+        public int age { get; set; }
+
+        [NotMapped]
+        public IFormFile? photo { get; set; }
+        public string? photoPath { get; set; }
+
     }
 }

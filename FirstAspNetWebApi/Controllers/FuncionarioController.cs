@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using FirstAspNetWebApi.Data;
+﻿using FirstAspNetWebApi.Data;
 using FirstAspNetWebApi.Model;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FirstAspNetWebApi.Controllers
 {
@@ -22,17 +16,26 @@ namespace FirstAspNetWebApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult Add(FuncionarioModel funcionario)
+        public IActionResult Add([FromForm] FuncionarioModel funcionario)
         {
-             if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
+                if (funcionario.photo != null)
+                {
+                    var filePath = Path.Combine("Storage", Guid.NewGuid().ToString() + funcionario.photo.FileName);
+
+                    using Stream fileStream = new FileStream(filePath, FileMode.Create);
+                    funcionario.photo.CopyTo(fileStream);
+                    funcionario.photoPath = filePath;
+                }
+
                 _context.Add(funcionario);
                 _context.SaveChanges();
 
                 return Ok();
             }
 
-             return BadRequest();
+            return BadRequest();
         }
 
         [HttpGet]
@@ -45,13 +48,13 @@ namespace FirstAspNetWebApi.Controllers
         [HttpGet("{id:int}")]
         public IActionResult GetById(int Id)
         {
-            if(Id == null || Id == 0)
+            if (Id == null || Id == 0)
             {
                 return BadRequest();
             }
             FuncionarioModel? funcionario = _context.Funcionarios.FirstOrDefault(el => el.Id == Id);
 
-            if(funcionario == null)
+            if (funcionario == null)
             {
                 return BadRequest();
             }
