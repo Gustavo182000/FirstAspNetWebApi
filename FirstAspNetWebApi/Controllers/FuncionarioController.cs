@@ -1,6 +1,7 @@
 ﻿using FirstAspNetWebApi.Data;
 using FirstAspNetWebApi.Model;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace FirstAspNetWebApi.Controllers
 {
@@ -61,7 +62,33 @@ namespace FirstAspNetWebApi.Controllers
             return Ok(funcionario);
         }
 
+        [HttpPut("{id:int}")]
+        public  IActionResult Update(int Id, [FromBody] FuncionarioModel funcionario)
+        {
 
+            if (Id != funcionario.Id)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(funcionario).State = EntityState.Modified;
+
+            try
+            {
+                 _context.SaveChangesAsync();
+            }
+            catch
+            {
+
+                return NotFound();
+
+            }
+
+            return NoContent();
+
+
+
+        }
 
 
 
