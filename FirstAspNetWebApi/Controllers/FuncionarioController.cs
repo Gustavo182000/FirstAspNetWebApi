@@ -86,11 +86,30 @@ namespace FirstAspNetWebApi.Controllers
 
             return NoContent();
 
-
-
         }
 
+        [HttpDelete("{id:int}")]
+        public IActionResult Delete(int Id)
+        {
 
+            if(Id == null || Id == 0)
+            {
+                return BadRequest();
+            }
+
+            var funcionario = _context.Funcionarios.FirstOrDefault(el => el.Id == Id);
+
+            if(funcionario == null)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(funcionario).State = EntityState.Deleted;
+            _context.SaveChanges();
+
+            return Ok();
+
+        }
 
 
 
