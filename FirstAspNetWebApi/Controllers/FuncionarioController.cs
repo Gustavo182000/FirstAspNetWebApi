@@ -111,7 +111,27 @@ namespace FirstAspNetWebApi.Controllers
 
         }
 
+        [HttpGet]
+        [Route("{id}/download")]
+        public IActionResult GetPhoto(int Id)
+        {
+            var funcionario = _context.Funcionarios.FirstOrDefault(el => el.Id == Id);
 
+            if(funcionario == null)
+            {
+                return BadRequest();    
+            }
+
+            if (funcionario.photoPath != null)
+            {
+                var dataBytes = System.IO.File.ReadAllBytes(funcionario.photoPath);
+
+                return File(dataBytes, "image/png");
+            }
+
+            return BadRequest();
+
+        }
 
     }
 }
